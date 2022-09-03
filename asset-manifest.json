@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.js": "/React_todo/static/js/main.ebcfd590.js",
+    "main.js": "/React_todo/static/js/main.db822d9a.js",
     "index.html": "/React_todo/index.html",
     "static/media/toggle_on.svg": "/React_todo/static/media/toggle_on.f44312371bdb20a29dbb926c1acb5ff9.svg",
     "static/media/toggle_off.svg": "/React_todo/static/media/toggle_off.9da43d6a8074aad47155cb21e07a5eaf.svg",
     "static/media/delete.svg": "/React_todo/static/media/delete.3270f2c93c8c138fa6cc69fbd18f985e.svg",
     "static/media/revise.svg": "/React_todo/static/media/revise.5b4bbee2e91b8855115c2a1dabf81f38.svg",
     "static/media/done.svg": "/React_todo/static/media/done.aa0a208ac7ceea63d93ea0bae6ad7313.svg",
-    "main.ebcfd590.js.map": "/React_todo/static/js/main.ebcfd590.js.map"
+    "main.db822d9a.js.map": "/React_todo/static/js/main.db822d9a.js.map"
   },
   "entrypoints": [
-    "static/js/main.ebcfd590.js"
+    "static/js/main.db822d9a.js"
   ]
 }
