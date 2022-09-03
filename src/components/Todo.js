@@ -71,12 +71,13 @@ function Input({ value, onChange, onKeyDown, placeholder }) {
     );
 }
 
-function ListItem({ children, onDelete, id }) {
+function ListItem({ children, onDelete, id, onRevise }) {
     const [mode, setMode] = useState("view");
     const [value, setValue] = useState(children);
 
-    const handleReviseClick = () => {
+    const handleReviseClick = (e) => {
         mode === "view" ? setMode("revise") : setMode("view");
+        onRevise(id, value);
     };
 
     const handleChange = (e) => {
@@ -112,6 +113,7 @@ function ListItem({ children, onDelete, id }) {
                         <StyledButton
                             src={reviseImg}
                             onClick={handleReviseClick}
+                            id={id}
                         />
                     </span>
                 </StyledLi>
@@ -136,7 +138,7 @@ function ListItem({ children, onDelete, id }) {
 
 export function Todo() {
     const [mode, setMode] = useState("on");
-    const [todo, setTodo] = useState([]);
+    const [todo, setTodo] = useState(JSON.parse(localStorage.getItem("item")));
     const [value, setValue] = useState("");
     const handleToggleClick = () => {
         if (mode === "on") {
@@ -160,6 +162,14 @@ export function Todo() {
         setTodo(nextTodo);
     };
 
+    const handleRevise = (id, value) => {
+        setTodo(todo.map((item, index) => (id === index ? value : item)));
+    };
+
+    useEffect(() => {
+        console.log(todo);
+        localStorage.setItem("item", JSON.stringify(todo));
+    }, [todo]);
     return (
         <StyledTodo>
             <span>
@@ -171,7 +181,12 @@ export function Todo() {
             {mode === "on" && (
                 <ul>
                     {todo.map((item, i) => (
-                        <ListItem key={item} id={i} onDelete={handleDelete}>
+                        <ListItem
+                            key={String(item) + String(i)}
+                            id={i}
+                            onDelete={handleDelete}
+                            onRevise={handleRevise}
+                        >
                             {item}
                         </ListItem>
                     ))}
