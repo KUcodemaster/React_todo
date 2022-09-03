@@ -17,6 +17,9 @@ const StyledTodo = styled.div`
     line-height: 3rem;
     display: flex;
     flex-direction: column;
+    @media screen and (max-width: 500px) {
+        width: 70%;
+    }
 `;
 
 const StyledToggler = styled.img`
@@ -138,7 +141,9 @@ function ListItem({ children, onDelete, id, onRevise }) {
 
 export function Todo() {
     const [mode, setMode] = useState("on");
-    const [todo, setTodo] = useState(JSON.parse(localStorage.getItem("item")));
+    const [todo, setTodo] = useState(
+        JSON.parse(localStorage.getItem("item")) || []
+    );
     const [value, setValue] = useState("");
     const handleToggleClick = () => {
         if (mode === "on") {
@@ -167,7 +172,6 @@ export function Todo() {
     };
 
     useEffect(() => {
-        console.log(todo);
         localStorage.setItem("item", JSON.stringify(todo));
     }, [todo]);
     return (
