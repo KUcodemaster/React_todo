@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import toggleOn from "../assets/toggle_on.svg";
 import toggleOff from "../assets/toggle_off.svg";
@@ -90,6 +90,10 @@ function ListItem({ children, onDelete, id }) {
         }
     };
 
+    const handleDeleteClick = () => {
+        onDelete(id);
+    };
+
     return (
         <>
             {mode === "view" ? (
@@ -102,7 +106,7 @@ function ListItem({ children, onDelete, id }) {
                     >
                         <StyledButton
                             src={deleteImg}
-                            onClick={onDelete}
+                            onClick={handleDeleteClick}
                             id={id}
                         />
                         <StyledButton
@@ -151,12 +155,9 @@ export function Todo() {
             setValue("");
         }
     };
-    const handleDelete = (e) => {
-        setTodo(
-            todo.filter((el, index) => {
-                return index !== Number(e.target.id);
-            })
-        );
+    const handleDelete = (id) => {
+        const nextTodo = todo.filter((item, index) => index !== id);
+        setTodo(nextTodo);
     };
 
     return (
@@ -170,7 +171,7 @@ export function Todo() {
             {mode === "on" && (
                 <ul>
                     {todo.map((item, i) => (
-                        <ListItem key={i} id={i} onDelete={handleDelete}>
+                        <ListItem key={item} id={i} onDelete={handleDelete}>
                             {item}
                         </ListItem>
                     ))}

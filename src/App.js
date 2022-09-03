@@ -2,6 +2,7 @@ import { Navbar } from "./components/Navbar";
 import { Todo } from "./components/Todo";
 import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
+import { Done } from "./components/Done";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -16,7 +17,8 @@ function App() {
             <GlobalStyle />
             <div>
                 <Navbar>To Do</Navbar>
-                <Todo>✓ 할 일</Todo>
+                <Todo></Todo>
+                <Done></Done>
             </div>
         </>
     );
