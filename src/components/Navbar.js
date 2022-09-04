@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const StyledNavbar = styled.div`
     background-color: #f8f9fa;
@@ -12,5 +13,11 @@ const StyledNavbar = styled.div`
 `;
 
 export function Navbar({ children }) {
-    return <StyledNavbar>{children}</StyledNavbar>;
+    return (
+        <StyledNavbar>
+            <Link to="/" style={{ color: "black", textDecoration: "none" }}>
+                {children}
+            </Link>
+        </StyledNavbar>
+    );
 }

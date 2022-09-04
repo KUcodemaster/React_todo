@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import styled from "styled-components";
-import toggleOn from "../assets/toggle_on.svg";
-import toggleOff from "../assets/toggle_off.svg";
+import { Toggler, StyledToggler } from "./Toggler";
 import reviseImg from "../assets/revise.svg";
 import deleteImg from "../assets/delete.svg";
 import doneImg from "../assets/done.svg";
+import { BsCheckSquare, BsCheckLg } from "react-icons/bs";
+import { RiArrowGoBackFill } from "react-icons/ri";
 
 const StyledTodo = styled.div`
     border-radius: 5px;
@@ -15,17 +16,11 @@ const StyledTodo = styled.div`
     margin-top: 5%;
     font-size: 2rem;
     line-height: 3rem;
-    display: flex;
+    display: inline-block;
     flex-direction: column;
-    @media screen and (max-width: 500px) {
+    @media screen and (max-width: 768px) {
         width: 70%;
     }
-`;
-
-const StyledToggler = styled.img`
-    margin-left: auto;
-    vertical-align: middle;
-    float: right;
 `;
 
 const StyledButton = styled(StyledToggler)`
@@ -47,21 +42,14 @@ const StyledLi = styled.li`
 `;
 
 const StyledListInput = styled.input`
-    width: 20vw;
+    width: 80%;
     font-size: 1.25rem;
     display: flex;
     padding: 0.25rem;
+    @media screen and (max-width: 768px) {
+        width: 70%;
+    }
 `;
-
-function Toggler({ mode, onClick }) {
-    return (
-        <StyledToggler
-            src={mode === "on" ? toggleOn : toggleOff}
-            onClick={onClick}
-            alt={mode === "on" ? "감추기" : "보이기"}
-        />
-    );
-}
 
 function Input({ value, onChange, onKeyDown, placeholder }) {
     return (
@@ -74,7 +62,7 @@ function Input({ value, onChange, onKeyDown, placeholder }) {
     );
 }
 
-function ListItem({ children, onDelete, id, onRevise }) {
+export function ListItem({ children, onDelete, id, onRevise, onDone, onBack }) {
     const [mode, setMode] = useState("view");
     const [value, setValue] = useState(children);
 
@@ -94,8 +82,17 @@ function ListItem({ children, onDelete, id, onRevise }) {
         }
     };
 
-    const handleDeleteClick = () => {
+    const handleDeleteTodoClick = () => {
         onDelete(id);
+    };
+
+    const handleDone = () => {
+        onDone(id);
+        onDelete(id);
+    };
+
+    const handleBack = () => {
+        onBack(id);
     };
 
     return (
@@ -110,14 +107,40 @@ function ListItem({ children, onDelete, id, onRevise }) {
                     >
                         <StyledButton
                             src={deleteImg}
-                            onClick={handleDeleteClick}
+                            onClick={handleDeleteTodoClick}
                             id={id}
                         />
-                        <StyledButton
-                            src={reviseImg}
-                            onClick={handleReviseClick}
-                            id={id}
-                        />
+                        {onBack && (
+                            <RiArrowGoBackFill
+                                style={{
+                                    height: "2rem",
+                                    width: "1.5rem",
+                                    verticalAlign: "top",
+                                    paddingLeft: "0.2rem",
+                                    paddingRight: "0.2rem",
+                                }}
+                                onClick={handleBack}
+                            ></RiArrowGoBackFill>
+                        )}
+                        {onDone && (
+                            <BsCheckLg
+                                style={{
+                                    height: "2rem",
+                                    width: "1.5rem",
+                                    verticalAlign: "top",
+                                    paddingLeft: "0.2rem",
+                                    paddingRight: "0.2rem",
+                                }}
+                                onClick={handleDone}
+                            />
+                        )}
+                        {onRevise && (
+                            <StyledButton
+                                src={reviseImg}
+                                onClick={handleReviseClick}
+                                id={id}
+                            />
+                        )}
                     </span>
                 </StyledLi>
             ) : (
@@ -139,11 +162,8 @@ function ListItem({ children, onDelete, id, onRevise }) {
     );
 }
 
-export function Todo() {
+export function Todo({ todo, setTodo, onDone }) {
     const [mode, setMode] = useState("on");
-    const [todo, setTodo] = useState(
-        JSON.parse(localStorage.getItem("item")) || []
-    );
     const [value, setValue] = useState("");
     const handleToggleClick = () => {
         if (mode === "on") {
@@ -162,7 +182,7 @@ export function Todo() {
             setValue("");
         }
     };
-    const handleDelete = (id) => {
+    const handleDeleteTodo = (id) => {
         const nextTodo = todo.filter((item, index) => index !== id);
         setTodo(nextTodo);
     };
@@ -171,13 +191,19 @@ export function Todo() {
         setTodo(todo.map((item, index) => (id === index ? value : item)));
     };
 
-    useEffect(() => {
-        localStorage.setItem("item", JSON.stringify(todo));
-    }, [todo]);
     return (
         <StyledTodo>
-            <span>
-                ✓ 할 일
+            <span
+                style={{
+                    display: "flex",
+                    alignItems: "center",
+                    lineHeight: "3rem",
+                }}
+            >
+                <BsCheckSquare
+                    style={{ marginRight: "10px", marginBottom: "3px" }}
+                ></BsCheckSquare>
+                할 일
                 <Toggler mode={mode} onClick={handleToggleClick}>
                     보이기
                 </Toggler>
@@ -188,8 +214,9 @@ export function Todo() {
                         <ListItem
                             key={String(item) + String(i)}
                             id={i}
-                            onDelete={handleDelete}
+                            onDelete={handleDeleteTodo}
                             onRevise={handleRevise}
+                            onDone={onDone}
                         >
                             {item}
                         </ListItem>

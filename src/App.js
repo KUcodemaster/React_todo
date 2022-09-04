@@ -4,6 +4,8 @@ import { createGlobalStyle } from "styled-components";
 import reset from "styled-reset";
 import { Done } from "./components/Done";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useState } from "react";
+import { useEffect } from "react";
 
 const GlobalStyle = createGlobalStyle`
   ${reset}
@@ -13,6 +15,28 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+    const [todo, setTodo] = useState(
+        JSON.parse(localStorage.getItem("todo")) || []
+    );
+    const [done, setDone] = useState(
+        JSON.parse(localStorage.getItem("done")) || []
+    );
+
+    useEffect(() => {
+        localStorage.setItem("todo", JSON.stringify(todo));
+    }, [todo]);
+    useEffect(() => {
+        localStorage.setItem("done", JSON.stringify(done));
+    }, [done]);
+
+    const handleDone = (id) => {
+        setDone([...done, todo[id]]);
+    };
+
+    const handleBack = (id) => {
+        setTodo([...todo, done[id]]);
+    };
+
     return (
         <BrowserRouter basename={process.env.PUBLIC_URL}>
             <Routes>
@@ -23,8 +47,16 @@ function App() {
                             <GlobalStyle />
                             <div>
                                 <Navbar>To Do</Navbar>
-                                <Todo></Todo>
-                                <Done></Done>
+                                <Todo
+                                    todo={todo}
+                                    setTodo={setTodo}
+                                    onDone={handleDone}
+                                ></Todo>
+                                <Done
+                                    done={done}
+                                    setDone={setDone}
+                                    onBack={handleBack}
+                                ></Done>
                             </div>
                         </>
                     }
