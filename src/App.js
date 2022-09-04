@@ -22,6 +22,12 @@ function App() {
         JSON.parse(localStorage.getItem("done")) || []
     );
 
+    const updateTitle = () => {
+        const htmlTitle = document.querySelector("title");
+        htmlTitle.innerHTML = "To Do";
+    };
+    useEffect(updateTitle, []);
+
     useEffect(() => {
         localStorage.setItem("todo", JSON.stringify(todo));
     }, [todo]);
